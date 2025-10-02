@@ -9,7 +9,7 @@ app = Flask(__name__)
 CORS(app)
 
 # Configure your API key
-api_key = "Your_API_Key_Here"
+api_key = "AIzaSyCNiHGiVpN-kOBTnPletaj9e9JR7InZR2A"
 genai.configure(api_key=api_key)
 
 def format_solution(response_text):
