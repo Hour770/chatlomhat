@@ -13,23 +13,28 @@ load_dotenv()
 app = Flask(__name__)
 
 # Configure CORS properly for production
-cors_origins = [
-    "http://localhost:3000",  # Local development
-    "http://localhost:3001",  # Alternative local port
-    "https://*.vercel.app",   # Vercel deployments
-    "https://vercel.app",     # Vercel domain
-]
+def is_allowed_origin(origin):
+    """Check if origin is allowed"""
+    allowed_patterns = [
+        'http://localhost:3000',
+        'http://localhost:3001', 
+        'https://chatlomhat.vercel.app',
+        'https://vercel.app'
+    ]
+    
+    # Allow any vercel.app subdomain
+    if origin and origin.endswith('.vercel.app'):
+        return True
+    
+    # Check specific patterns
+    return origin in allowed_patterns
 
-# Add custom frontend URL if specified in environment
-frontend_url = os.getenv('FRONTEND_URL')
-if frontend_url:
-    cors_origins.append(frontend_url)
-
+# Simple CORS configuration that works with Vercel
 CORS(app, 
-     origins=cors_origins,
+     origins=['*'],  # Allow all origins for now, we'll validate in the app
      methods=['GET', 'POST', 'OPTIONS'],
      allow_headers=['Content-Type', 'Authorization'],
-     supports_credentials=True)
+     supports_credentials=False)  # Set to False when using wildcard origins
 
 # Configure your API key from environment variables
 api_key = os.getenv('GOOGLE_AI_API_KEY')
