@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { getApiEndpoint } from "@/config";
 
 interface Exercise {
   problem: string;
@@ -26,7 +27,7 @@ export default function ExerciseGenerator() {
     setResponse({ exercises: [], loading: true });
     
     try {
-      const res = await fetch('http://localhost:5002/generate-exercises', {
+      const res = await fetch(getApiEndpoint('/generate-exercises'), {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

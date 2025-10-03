@@ -4,12 +4,20 @@ import google.generativeai as genai
 from PIL import Image
 import io
 import base64
+import os
+from dotenv import load_dotenv
+
+# Load environment variables
+load_dotenv()
 
 app = Flask(__name__)
 CORS(app)
 
-# Configure your API key
-api_key = "AIzaSyCNiHGiVpN-kOBTnPletaj9e9JR7InZR2A"
+# Configure your API key from environment variables
+api_key = os.getenv('GOOGLE_AI_API_KEY')
+if not api_key:
+    raise ValueError("GOOGLE_AI_API_KEY environment variable is required")
+    
 genai.configure(api_key=api_key)
 
 def format_solution(response_text):

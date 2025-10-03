@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { getApiEndpoint } from "@/config";
 
 interface MathResponse {
   solution: string;
@@ -49,7 +50,7 @@ export default function MathSolver() {
         formData.append("prompt", problem);
       }
 
-      const res = await fetch("http://localhost:5002/solve", {
+      const res = await fetch(getApiEndpoint("/solve"), {
         method: "POST",
         body: formData,
       });
