@@ -11,7 +11,25 @@ from dotenv import load_dotenv
 load_dotenv()
 
 app = Flask(__name__)
-CORS(app)
+
+# Configure CORS properly for production
+cors_origins = [
+    "http://localhost:3000",  # Local development
+    "http://localhost:3001",  # Alternative local port
+    "https://*.vercel.app",   # Vercel deployments
+    "https://vercel.app",     # Vercel domain
+]
+
+# Add custom frontend URL if specified in environment
+frontend_url = os.getenv('FRONTEND_URL')
+if frontend_url:
+    cors_origins.append(frontend_url)
+
+CORS(app, 
+     origins=cors_origins,
+     methods=['GET', 'POST', 'OPTIONS'],
+     allow_headers=['Content-Type', 'Authorization'],
+     supports_credentials=True)
 
 # Configure your API key from environment variables
 api_key = os.getenv('GOOGLE_AI_API_KEY')
@@ -194,7 +212,12 @@ def generate_exercises():
 @app.route('/health', methods=['GET'])
 def health_check():
     """Health check endpoint"""
-    return jsonify({'status': 'healthy', 'message': 'Math API is running'})
+    return jsonify({
+        'status': 'healthy', 
+        'message': 'Math API is running',
+        'cors_enabled': True,
+        'environment': os.getenv('FLASK_ENV', 'development')
+    })
 
 @app.route('/', methods=['GET'])
 def home():
@@ -205,7 +228,9 @@ def home():
             'solve': 'POST /solve - ដោះស្រាយបញ្ហាគណិតវិទ្យា',
             'generate-exercises': 'POST /generate-exercises - បង្កើតលំហាត់សម្រាប់ការអនុវត្ត',
             'health': 'GET /health - ពិនិត្យសុខភាពប្រព័ន្ធ'
-        }
+        },
+        'cors_enabled': True,
+        'environment': os.getenv('FLASK_ENV', 'development')
     })
 
 if __name__ == '__main__':
