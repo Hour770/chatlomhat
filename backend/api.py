@@ -34,15 +34,23 @@ def format_solution(response_text):
     if text.endswith('```'):
         text = text.rsplit('```', 1)[0]
     
-    # Clean up extra whitespace
+    # Clean up extra whitespace and formatting symbols
     lines = text.split('\n')
     cleaned_lines = []
     
     for line in lines:
         line = line.strip()
         if line:  # Skip empty lines
+            # Remove stars (*) at the beginning of lines
+            if line.startswith('*'):
+                line = line[1:].strip()
+            # Remove bullet points and other formatting
+            if line.startswith('-'):
+                line = line[1:].strip()
+            if line.startswith('•'):
+                line = line[1:].strip()
             # Add proper spacing for steps
-            if line.lower().startswith(('step', 'solution', 'answer')):
+            if line.lower().startswith(('step', 'solution', 'answer', 'ជំហាន')):
                 cleaned_lines.append('\n' + line)
             else:
                 cleaned_lines.append(line)
@@ -65,19 +73,13 @@ def build_prompt(user_input, is_exercise=False, topic=None, difficulty=None, num
         ត្រូវធ្វើឱ្យប្រាកដថាសំណួរទាំងនេះមានលក្ខណៈអប់រំ និងសមរម្យសម្រាប់កម្រិត {difficulty}។
         រួមបញ្ចូលការដោះស្រាយជាជំហានៗនៅក្នុងចម្លើយ។"""
     else:
-        return f"""អ្នកគឺជាគ្រូបង្រៀនគណិតវិទ្យាដ៏មិត្តភាព កំពុងជួយសិស្ស។ សូមដោះស្រាយបញ្ហាគណិតវិទ្យានេះយ៉ាងច្បាស់ និងសាមញ្ញ:
+        return f"""ដោះស្រាយបញ្ហាគណិតវិទ្យានេះ:
 
 {user_input}
 
-សូមផ្តល់:
-១. ការដោះស្រាយជាជំហានៗដ៏ច្បាស់លាស់
-២. ពន្យល់នូវជំហាននីមួយៗដោយពាក្យសាមញ្ញ
-៣. បង្ហាញចម្លើយចុងក្រោយយ៉ាងច្បាស់
-៤. ប្រើអក្សរធម្មតាដោយមិនមានសញ្ញាពិសេស
+ផ្តល់ការដោះស្រាយជាជំហានៗច្បាស់លាស់ ពន្យល់ជំហាននីមួយៗ និងបង្ហាញចម្លើយចុងក្រោយ។ ប្រើអក្សរធម្មតាដោយមិនមានសញ្ញាពិសេស។
 
-ធ្វើឱ្យការពន្យល់របស់អ្នកងាយយល់សម្រាប់អ្នកដែលកំពុងរៀនគណិតវិទ្យា។
-
-សូមឆ្លើយជាភាសាខ្មែរទាំងស្រុង។"""
+ឆ្លើយជាភាសាខ្មែរ។"""
 
 @app.route('/solve', methods=['POST'])
 def solve_math():
