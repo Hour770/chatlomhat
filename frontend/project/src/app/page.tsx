@@ -5,7 +5,6 @@ import Header from "../components/Header";
 import Footer from "../components/Footer";
 import MathSolver from "../components/MathSolver";
 import ExerciseGenerator from "../components/ExerciseGenerator";
-import ConnectionStatus from "../components/ConnectionStatus";
 
 export default function Home() {
   const [activeTab, setActiveTab] = useState<'solver' | 'exercise'>('solver');
@@ -25,10 +24,6 @@ export default function Home() {
               Your AI-powered math assistant for solving problems and generating practice exercises
             </p>
             
-            {/* Connection Status Debug Info */}
-            <div className="mb-4">
-              <ConnectionStatus />
-            </div>
           </div>
 
           {/* Tab Navigation */}
