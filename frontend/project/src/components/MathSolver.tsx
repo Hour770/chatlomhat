@@ -50,7 +50,7 @@ export default function MathSolver() {
         formData.append("prompt", problem);
       }
 
-      const res = await fetch(getApiEndpoint("/solve"), {
+      const res = await fetch("/api/solve", {
         method: "POST",
         body: formData,
       });
