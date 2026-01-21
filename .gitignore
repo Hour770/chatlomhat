@@ -67,3 +67,6 @@ vector_db/
 
 # Jupyter Notebook
 .ipynb_checkpoints
+
+# security set up
+SECURITY_SETUP.md
