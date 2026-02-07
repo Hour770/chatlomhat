@@ -43,6 +43,59 @@ if not api_key:
     
 genai.configure(api_key=api_key)
 
+def is_math_related(user_input):
+    """Check if the user input is related to mathematics"""
+    # Math-related keywords in English and Khmer
+    math_keywords = [
+        # English math terms
+        'solve', 'calculate', 'compute', 'equation', 'formula', 'math', 'maths',
+        'add', 'subtract', 'multiply', 'divide', 'sum', 'difference', 'product', 'quotient',
+        'algebra', 'geometry', 'calculus', 'trigonometry', 'statistics', 'probability',
+        'number', 'integer', 'decimal', 'fraction', 'percentage', 'percent', 'ratio',
+        'square', 'cube', 'root', 'power', 'exponent', 'logarithm', 'log',
+        'derivative', 'integral', 'limit', 'function', 'graph', 'plot',
+        'angle', 'triangle', 'circle', 'rectangle', 'polygon', 'area', 'perimeter', 'volume',
+        'matrix', 'vector', 'determinant', 'linear', 'quadratic', 'polynomial',
+        'sin', 'cos', 'tan', 'sine', 'cosine', 'tangent',
+        'prime', 'factor', 'multiple', 'divisor', 'gcd', 'lcm',
+        'mean', 'median', 'mode', 'average', 'standard deviation', 'variance',
+        'greater', 'less', 'equal', 'inequality',
+        # Khmer math terms
+        'គណិត', 'គណនា', 'សមីការ', 'រូបមន្ត', 'លេខ', 'បូក', 'ដក', 'គុណ', 'ចែក',
+        'ពីជគណិត', 'ធរណីមាត្រ', 'កាលីគុយល', 'ត្រីកោណមាត្រ', 'ស្ថិតិ', 'ប្រូបាប',
+        'ប្រភាគ', 'ភាគរយ', 'សមាមាត្រ', 'ការ៉េ', 'រ៉ាឌីកាល់', 'អនុវត្ត', 'ដោះស្រាយ',
+        'មុំ', 'ត្រីកោណ', 'រង្វង់', 'ចតុកោណ', 'ផ្ទៃ', 'បរិមាត្រ', 'មាឌ',
+        'អនុគមន៍', 'ដេរីវេ', 'អាំងតេក្រាល', 'លីមីត', 'ក្រាហ្វ',
+        'មធ្យម', 'មេដ្យាន', 'ម៉ូដ', 'វ៉ារ្យង់'
+    ]
+    
+    # Math symbols and patterns
+    math_symbols = ['+', '-', '*', '/', '=', '<', '>', '≤', '≥', '≠', '²', '³', '√', 'π', '%', '^']
+    
+    # Check for math symbols
+    for symbol in math_symbols:
+        if symbol in user_input:
+            return True
+    
+    # Check for numbers with operators (e.g., "2+2", "5x3")
+    import re
+    math_pattern = r'\d+\s*[+\-*/x×÷=<>^]\s*\d+'
+    if re.search(math_pattern, user_input, re.IGNORECASE):
+        return True
+    
+    # Check for math keywords
+    user_input_lower = user_input.lower()
+    for keyword in math_keywords:
+        if keyword.lower() in user_input_lower:
+            return True
+    
+    # Check for equation patterns (e.g., "x = 5", "2x + 3 = 7")
+    equation_pattern = r'[a-zA-Z]\s*[=+\-*/]\s*\d+|\d+\s*[a-zA-Z]'
+    if re.search(equation_pattern, user_input):
+        return True
+    
+    return False
+
 def format_solution(response_text):
     """Clean and format the AI response to be more readable for regular users"""
     if not response_text:
@@ -142,6 +195,13 @@ def solve_math():
             
             if not prompt:
                 return jsonify({'success': False, 'error': 'មិនបានផ្តល់សំណួរ'}), 400
+            
+            # Check if the input is math-related
+            if not is_math_related(prompt):
+                return jsonify({
+                    'success': False,
+                    'error': 'សូមអភ័យទោស! ខ្ញុំអាចជួយដោះស្រាយបញ្ហាគណិតវិទ្យាប៉ុណ្ណោះ។ សូមបញ្ចូលសំណួរគណិតវិទ្យា។\n\nSorry! I can only help with math-related problems. Please enter a math question.'
+                }), 400
             
             # Build the full prompt
             full_prompt = build_prompt(prompt)

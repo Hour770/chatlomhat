@@ -27,7 +27,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <head>
-        <link rel="chatlomhat logo" href="/logo.png" />
+        <link rel="icon" href="/logo.png" type="image/png"/>
       </head>
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
