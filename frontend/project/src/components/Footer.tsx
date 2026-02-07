@@ -4,7 +4,7 @@ export default function Footer() {
       <div className="container mx-auto px-4 py-8">
         <div className="text-center">
           <p className="text-gray-600 dark:text-gray-400">
-            Copyright &copy; 2025 ChatLomhat. Powered by <a href="https://cheamenghour.me" target='_blank'>Chea Menghour</a>. All rights reserved.
+            ChatLomat &copy; {new Date().getFullYear()} All rights reserved.
           </p>
           <div className="flex justify-center space-x-6 mt-4">
             <a href="#" className="text-sm text-gray-500 dark:text-gray-400 hover:text-blue-500 transition-colors">
@@ -13,7 +13,7 @@ export default function Footer() {
             <a href="#" className="text-sm text-gray-500 dark:text-gray-400 hover:text-blue-500 transition-colors">
               Terms of Service
             </a>
-            <a href="#" className="text-sm text-gray-500 dark:text-gray-400 hover:text-blue-500 transition-colors">
+            <a href="mailto:cheamenghour20@gmail.com" className="text-sm text-gray-500 dark:text-gray-400 hover:text-blue-500 transition-colors">
               Contact
             </a>
           </div>
