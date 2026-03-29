@@ -17,7 +17,7 @@ interface AuthContextType {
   isAuthenticated: boolean;
   requestOtp: (email: string) => Promise<{ success: boolean; devCode?: string; error?: string }>;
   verifyOtp: (email: string, code: string) => Promise<{ success: boolean; error?: string }>;
-  signUp: (email: string, password: string, name: string) => Promise<{ success: boolean; error?: string }>;
+  signUp: (email: string, name: string) => Promise<{ success: boolean; error?: string }>;
   signOut: () => void;
   addToSolverHistory: (question: string, answer: string) => Promise<void>;
   addToExerciseHistory: (topic: string, difficulty: string, exercises: string) => Promise<void>;
@@ -150,14 +150,14 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     }
   };
 
-  const signUp = async (email: string, password: string, name: string): Promise<{ success: boolean; error?: string }> => {
+  const signUp = async (email: string, name: string): Promise<{ success: boolean; error?: string }> => {
     try {
       const response = await fetch(`${config.apiUrl}/auth/signup`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ email, password, name }),
+        body: JSON.stringify({ email, name }),
       });
       
       const data = await response.json();
