@@ -105,9 +105,6 @@ export default function SignUpPage() {
                 disabled={isLoading}
               />
             </div>
-
-
-
             <button
               type="submit"
               disabled={isLoading}
