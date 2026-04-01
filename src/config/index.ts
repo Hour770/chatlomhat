@@ -1,12 +1,19 @@
 // Environment configuration
-const getApiUrl = () => {
-  // In production (Vercel), always use the environment variable
-  if (process.env.NODE_ENV === 'production') {
-    return process.env.NEXT_PUBLIC_API_URL || 'https://chatlomhat.onrender.com'
+const normalizeApiUrl = (value: string) => {
+  const trimmed = value.trim();
+  if (!trimmed) return trimmed;
+  if (/^https?:\/\//i.test(trimmed)) {
+    return trimmed;
   }
-  
-  // In development, check if we have a custom API URL set, otherwise use localhost
-  return process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5002'
+  return `https://${trimmed}`;
+};
+
+const getApiUrl = () => {
+  const envUrl = process.env.NEXT_PUBLIC_API_URL;
+  if (!envUrl) {
+    throw new Error('NEXT_PUBLIC_API_URL is not set');
+  }
+  return normalizeApiUrl(envUrl);
 }
 
 export const config = {
