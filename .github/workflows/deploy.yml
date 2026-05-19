@@ -1,0 +1,38 @@
+name: Deploy Chatlomhat
+
+on:
+  push:
+    branches:
+      - main   # change if using another branch
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Deploy to Droplet via SSH
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.DROPLET_HOST }}
+          username: ${{ secrets.DROPLET_USER }}
+          key: ${{ secrets.DROPLET_SSH_KEY }}
+          script: |
+            cd /var/www/chatlomhat
+            git remote set-url origin git@github.com:Hour770/chatlomhat.git
+
+            echo "Pull latest code"
+            git pull origin main
+
+            curl -fsSL https://deb.nodesource.com/setup_20.x | sudo -E bash -
+            sudo apt install -y nodejs
+
+            echo "Build project"
+            npm run build
+
+            npm install -g pm2
+
+            echo "Restart PM2"
+            pm2 restart chatlomhat || pm2 start npm --name chatlomhat -- start
+
+            echo "Save PM2"
+            pm2 save
